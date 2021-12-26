@@ -6,5 +6,3 @@ build
 
 # Ignore idea directory
 .idea
-
-..env
