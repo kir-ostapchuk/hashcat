@@ -1,0 +1,40 @@
+version: "2"
+
+services:
+  nginx:
+    build:
+      context: nginx
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    depends_on:
+      - hashcat
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+
+  hashcat:
+    container_name: backend
+    build:
+      context: .
+    restart: on-failure
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      MD5_AUTH_EMAIL: ${MD5_AUTH_EMAIL}
+      MD5_AUTH_CODE: ${MD5_AUTH_CODE}
+      SENDER_AUTH_USERNAME: ${SENDER_AUTH_USERNAME}
+      SENDER_AUTH_PASSWORD: ${SENDER_AUTH_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+
+

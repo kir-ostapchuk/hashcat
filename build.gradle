@@ -1,0 +1,38 @@
+plugins {
+    id 'idea'
+    id 'java'
+    id 'org.springframework.boot' version '2.5.2'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+repositories {
+    mavenCentral()
+}
+
+group = 'tt.hashcat'
+version = '0.0.1'
+
+sourceCompatibility = "16"
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+jar {
+    enabled = false // to prevent create plain jar
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.projectlombok:lombok'
+    implementation 'commons-validator:commons-validator:1.4.1'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'com.sun.mail:javax.mail:1.6.2'
+    runtimeOnly 'org.postgresql:postgresql'
+
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+}
+targetCompatibility = JavaVersion.VERSION_16
