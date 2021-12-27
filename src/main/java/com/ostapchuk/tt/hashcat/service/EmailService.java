@@ -10,10 +10,12 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import static com.ostapchuk.tt.hashcat.util.Constant.ENCRYPTION_RESULTS;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmailService {
@@ -41,7 +43,7 @@ public class EmailService {
             message.setText(encrypted);
             Transport.send(message);
         } catch (final MessagingException mex) {
-            mex.printStackTrace(); // TODO: 12/26/2021
+            log.error("Cannot send email: " + mex.getCause());
         }
     }
 }
