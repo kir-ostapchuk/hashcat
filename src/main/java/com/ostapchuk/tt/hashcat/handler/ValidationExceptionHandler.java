@@ -6,17 +6,15 @@ import java.util.List;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class ValidationExceptionHandler {
 
     @ResponseStatus(BAD_REQUEST)
-    @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ErrorResponseDto methodArgumentNotValidException(final MethodArgumentNotValidException ex) {
         final BindingResult result = ex.getBindingResult();
