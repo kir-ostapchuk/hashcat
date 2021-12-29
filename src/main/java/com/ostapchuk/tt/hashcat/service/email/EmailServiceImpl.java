@@ -1,4 +1,4 @@
-package com.ostapchuk.tt.hashcat.service;
+package com.ostapchuk.tt.hashcat.service.email;
 
 import java.util.Properties;
 import javax.mail.Authenticator;
@@ -12,13 +12,12 @@ import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import static com.ostapchuk.tt.hashcat.util.Constant.ENCRYPTION_RESULTS;
+import org.springframework.stereotype.Component;
 
 @Slf4j
-@Service
+@Component
 @RequiredArgsConstructor
-public class EmailService {
+public class EmailServiceImpl implements EmailService {
 
     @Value("${sender.auth.userName}")
     private String authUserName;
@@ -28,7 +27,7 @@ public class EmailService {
 
     private final Properties mailRuSmtpProperties;
 
-    public void send(final String to, final String encrypted) {
+    public void send(final String to, final String message, final String subject) {
         final Session session = Session.getInstance(mailRuSmtpProperties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -36,12 +35,12 @@ public class EmailService {
             }
         });
         try {
-            final MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(authUserName));
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-            message.setSubject(ENCRYPTION_RESULTS);
-            message.setText(encrypted);
-            Transport.send(message);
+            final MimeMessage mimeMsg = new MimeMessage(session);
+            mimeMsg.setFrom(new InternetAddress(authUserName));
+            mimeMsg.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            mimeMsg.setSubject(subject);
+            mimeMsg.setText(message);
+            Transport.send(mimeMsg);
         } catch (final MessagingException mex) {
             log.error("Cannot send email: " + mex.getCause());
         }

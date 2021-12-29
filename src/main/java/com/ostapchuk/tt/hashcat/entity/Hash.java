@@ -36,7 +36,7 @@ public class Hash {
     @Column(name = "encrypted", unique = true)
     private String encrypted;
 
-    @ManyToMany()
+    @ManyToMany
     @JoinTable(name = "application_hash",
             joinColumns = {@JoinColumn(name = "hash_id")},
             inverseJoinColumns = {@JoinColumn(name = "application_id")}

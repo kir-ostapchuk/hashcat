@@ -13,19 +13,18 @@ import java.util.stream.Stream;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import static com.ostapchuk.tt.hashcat.util.Constant.ERROR_CODE_MD5_CLIENT;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 @Service
 @AllArgsConstructor
 @ToString
 public class HashService {
 
-    private HashRepository hashRepository;
-    private ApplicationRepository applicationRepository;
-    private Encryptor encryptor;
-    private EmailService emailService;
+    private final Encryptor encryptor;
+    private final HashRepository hashRepository;
+    private final ApplicationRepository applicationRepository;
 
     @Transactional
     public List<CompletableFuture<Hash>> findOrSaveAll(final ApplicationDto applicationDto) {
@@ -34,7 +33,7 @@ public class HashService {
                                                                    .email(applicationDto.getEmail())
                                                                    .build());
         final var decryptedByExistence = decrypted.stream()
-                .collect(Collectors.partitioningBy(d -> hashRepository.existsByDecrypted(d)));
+                .collect(Collectors.partitioningBy(hashRepository::existsByDecrypted));
         final var found = decryptedByExistence.get(true)
                 .stream().map(d -> hashRepository.save(hashRepository.findByDecrypted(d).addApplication(application)))
                 .map(CompletableFuture::completedFuture);
@@ -52,11 +51,21 @@ public class HashService {
                 .thenApply(r -> {
                     final var body = r.body();
                     if (body.contains(ERROR_CODE_MD5_CLIENT)) {
-                        hash.setEncrypted(StringUtils.EMPTY);
+                        hash.setEncrypted(EMPTY);
                     } else {
                         hash.setEncrypted(body);
                     }
                     return hashRepository.save(hash);
                 });
     }
+
+//    private Hash findOrSave(final String decrypted, final Application application) {
+//        return hashRepository.findByDecrypted(decrypted).orElseGet(() -> {
+//            final Hash hash = Hash.builder()
+//                    .decrypted(decrypted)
+//                    .build()
+//                    .addApplication(application);
+//            return hashRepository.save(hash);
+//        });
+//    }
 }
