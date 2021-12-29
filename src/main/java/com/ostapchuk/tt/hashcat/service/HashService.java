@@ -34,6 +34,8 @@ public class HashService {
         return encryptor.encrypt(hash)
                 .thenApply(r -> {
                     final var body = r.body();
+                    // TODO: 12/29/2021 redo this hardcoded error, think about future,
+                    //  what if there is one more new algorithm, check that case. Create such a situation.
                     if (body.contains(ERROR_CODE_MD5_CLIENT)) {
                         hash.setEncrypted(EMPTY);
                     } else {

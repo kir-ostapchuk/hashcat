@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // TODO: 12/26/2021 add Tests
 // TODO: 12/26/2021 add Swagger
 // TODO: 12/29/2021 check handling of Exception
+// TODO: 12/29/2021 check transactional is it really needed
 
 @SpringBootApplication
 public class HashCatApplication {
