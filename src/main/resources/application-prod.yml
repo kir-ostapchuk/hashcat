@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: hashcat
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: create # bad idea. but it's some kind of migration tool for now.
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/${POSTGRES_DB}
+    hikari:
+      username: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+
+logging:
+  level:
+    org.hibernate.stat: ERROR
+
+md5:
+  auth:
+    email: ${MD5_AUTH_EMAIL}
+    code: ${MD5_AUTH_CODE}
+
+sender:
+  auth:
+    userName: ${SENDER_AUTH_USERNAME}
+    password: ${SENDER_AUTH_PASSWORD}
