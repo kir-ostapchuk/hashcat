@@ -1,6 +1,5 @@
 package com.ostapchuk.tt.hashcat.entity;
 
-import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,5 +31,5 @@ public class Application {
     private String email;
 
     @ManyToMany(mappedBy = "applications")
-    private Set<Hash> hashes = new HashSet<>();
+    private Set<Hash> hashes;
 }

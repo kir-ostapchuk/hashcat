@@ -41,7 +41,7 @@ public class Hash {
             joinColumns = {@JoinColumn(name = "hash_id")},
             inverseJoinColumns = {@JoinColumn(name = "application_id")}
     )
-    private Set<Application> applications = new HashSet<>();
+    private Set<Application> applications;
 
     public Hash addApplication(final Application application) {
         if (this.applications == null) {
