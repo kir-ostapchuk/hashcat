@@ -103,10 +103,7 @@ databaseChangeLog:
         tableName: hash
 - changeSet:
     id: 1641200207381-7
-    author: xfase (generated)
+    author: k.ostapchuk
     changes:
-    - addUniqueConstraint:
-        columnNames: encrypted
-        constraintName: uk_mystit1jchu3xdb89bhadimxd
-        tableName: hash
-
+    - sql:
+        sql: insert into hash (decrypted, encrypted) values ('12345678', '')

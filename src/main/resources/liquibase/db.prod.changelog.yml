@@ -101,12 +101,3 @@ databaseChangeLog:
         columnNames: decrypted
         constraintName: uk_i9snxbgut6m0hkmcl0f7quypc
         tableName: hash
-- changeSet:
-    id: 1641200207381-7
-    author: xfase (generated)
-    changes:
-    - addUniqueConstraint:
-        columnNames: encrypted
-        constraintName: uk_mystit1jchu3xdb89bhadimxd
-        tableName: hash
-

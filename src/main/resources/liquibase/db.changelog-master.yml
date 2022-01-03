@@ -1,7 +1,7 @@
 databaseChangeLog:
   - include:
-      file: liquibase/db.dev.changelog.yml
+      file: db.dev.changelog.yml
       context: dev
   - include:
-      file: liquibase/db.prod.changelog.yml
+      file: db.prod.changelog.yml
       context: prod

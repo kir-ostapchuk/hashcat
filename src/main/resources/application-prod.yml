@@ -9,14 +9,6 @@ spring:
     hikari:
       username: ${POSTGRES_USER}
       password: ${POSTGRES_PASSWORD}
-  liquibase:
-    url: jdbc:postgresql://${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/${POSTGRES_DB}
-    user: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
-    driver-class-name: org.postgresql.Driver
-    drop-first: false
-    change-log: liquibase/db.changelog-master.yml
-    contexts: prod
 
 logging:
   level:
