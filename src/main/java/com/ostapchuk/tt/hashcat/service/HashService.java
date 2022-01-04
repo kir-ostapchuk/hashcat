@@ -25,13 +25,6 @@ public class HashService {
     private final HashRepository hashRepository;
 
     @Transactional
-    public Map<Boolean, List<Hash>> findOrSaveAll(final List<String> decrypted, final Application application) {
-        return decrypted.stream()
-                .map(d -> findOrSave(d, application))
-                .collect(Collectors.partitioningBy(h -> h.getEncrypted() != null));
-    }
-
-    @Transactional
     public CompletableFuture<Hash> process(final Hash hash) {
         return encryptor.encrypt(hash)
                 .thenApply(r -> {
@@ -46,9 +39,11 @@ public class HashService {
                 });
     }
 
-    private Optional<Hash> findByDecrypted(final String decrypted, final Application application) {
-        return hashRepository.findByDecrypted(decrypted)
-                .map(hash -> hash.addApplication(application));
+    @Transactional
+    public Map<Boolean, List<Hash>> findOrSaveAll(final List<String> decrypted, final Application application) {
+        return decrypted.stream()
+                .map(d -> findOrSave(d, application))
+                .collect(Collectors.partitioningBy(h -> h.getEncrypted() != null));
     }
 
     private Hash findOrSave(final String decrypted, final Application application) {
@@ -59,5 +54,10 @@ public class HashService {
                     .addApplication(application);
             return hashRepository.save(hash);
         });
+    }
+
+    private Optional<Hash> findByDecrypted(final String decrypted, final Application application) {
+        return hashRepository.findByDecrypted(decrypted)
+                .map(hash -> hash.addApplication(application));
     }
 }

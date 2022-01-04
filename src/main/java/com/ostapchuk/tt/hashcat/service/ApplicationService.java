@@ -30,11 +30,11 @@ public class ApplicationService {
                                                                        .email(applicationDto.getEmail())
                                                                        .build());
             final var hashes = hashService.findOrSaveAll(applicationDto.getHashes(), application);
-            final var updated = hashes.get(false).stream()
+            final var saved = hashes.get(false).stream()
                     .map(hashService::process);
             final var found = hashes.get(true).stream()
                     .map(CompletableFuture::completedFuture);
-            final var futures = Stream.concat(updated, found).toList();
+            final var futures = Stream.concat(saved, found).toList();
             CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
             final AtomicReference<String> message = prepareMessage(futures);
             emailService.send(applicationDto.getEmail(), message.get(), ENCRYPTION_RESULTS);
