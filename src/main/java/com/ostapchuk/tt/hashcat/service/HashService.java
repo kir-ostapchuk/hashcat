@@ -11,11 +11,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import static com.ostapchuk.tt.hashcat.util.Constant.ERROR_CODE_MD5_CLIENT;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 @Service
+@Slf4j
 @AllArgsConstructor
 public class HashService {
 
@@ -34,9 +36,8 @@ public class HashService {
         return encryptor.encrypt(hash)
                 .thenApply(r -> {
                     final var body = r.body();
-                    // TODO: 12/29/2021 redo this hardcoded error, think about future,
-                    //  what if there is one more new algorithm, check that case. Create such a situation.
                     if (body.contains(ERROR_CODE_MD5_CLIENT)) {
+                        log.info("Can not get hash from the external service. Error: " + body);
                         hash.setEncrypted(EMPTY);
                     } else {
                         hash.setEncrypted(body);
