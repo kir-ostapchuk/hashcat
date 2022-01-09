@@ -1,0 +1,103 @@
+databaseChangeLog:
+- changeSet:
+    id: 1641200207381-1
+    author: xfase (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: application_pkey
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: email
+            type: VARCHAR(255)
+        tableName: application
+- changeSet:
+    id: 1641200207381-2
+    author: xfase (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: hash_pkey
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: decrypted
+            type: VARCHAR(255)
+        - column:
+            name: encrypted
+            type: VARCHAR(255)
+        tableName: hash
+- changeSet:
+    id: 1641200207381-3
+    author: xfase (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: application_hash_pkey
+            name: hash_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: application_hash_pkey
+            name: application_id
+            type: BIGINT
+        tableName: application_hash
+- changeSet:
+    id: 1641200207381-4
+    author: xfase (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: application_id
+        baseTableName: application_hash
+        constraintName: fk6826ta6js822j94x6jdsx7qcp
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: application
+        validate: true
+- changeSet:
+    id: 1641200207381-5
+    author: xfase (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: hash_id
+        baseTableName: application_hash
+        constraintName: fkmtc4lurjx1h93sww0k6kxr6og
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: hash
+        validate: true
+- changeSet:
+    id: 1641200207381-6
+    author: xfase (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: decrypted
+        constraintName: uk_i9snxbgut6m0hkmcl0f7quypc
+        tableName: hash

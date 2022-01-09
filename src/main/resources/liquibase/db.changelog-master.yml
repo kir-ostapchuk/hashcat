@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: db.dev.changelog.yml
+      context: dev
+  - include:
+      file: db.prod.changelog.yml
+      context: prod

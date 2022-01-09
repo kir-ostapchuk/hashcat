@@ -1,0 +1,55 @@
+version: "2"
+
+services:
+  nginx:
+    build:
+      context: nginx
+    restart: on-failure
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    depends_on:
+      - hashcat
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+
+  migration:
+    image: liquibase/liquibase
+    command: --url=jdbc:postgresql://${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/${POSTGRES_DB}?user=${POSTGRES_USER}&password=${POSTGRES_PASSWORD} --contexts=${SPRING_PROFILES_ACTIVE} --changeLogFile=db.changelog-master.yml update
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_HOSTNAME: ${POSTGRES_HOSTNAME}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+    volumes:
+      - ./src/main/resources/liquibase/db.changelog-master.yml:/liquibase/db.changelog-master.yml
+      - ./src/main/resources/liquibase/db.dev.changelog.yml:/liquibase/db.dev.changelog.yml
+      - ./src/main/resources/liquibase/db.prod.changelog.yml:/liquibase/db.prod.changelog.yml
+    depends_on:
+      - postgres
+
+  hashcat:
+    build:
+      context: .
+    restart: on-failure
+    depends_on:
+      - migration
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_HOSTNAME: ${POSTGRES_HOSTNAME}
+      MD5_AUTH_EMAIL: ${MD5_AUTH_EMAIL}
+      MD5_AUTH_CODE: ${MD5_AUTH_CODE}
+      SENDER_AUTH_USERNAME: ${SENDER_AUTH_USERNAME}
+      SENDER_AUTH_PASSWORD: ${SENDER_AUTH_PASSWORD}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
