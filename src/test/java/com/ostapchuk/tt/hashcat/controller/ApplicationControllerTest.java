@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.ostapchuk.tt.hashcat.dto.ApplicationDto;
+import com.ostapchuk.tt.hashcat.entity.User;
 import com.ostapchuk.tt.hashcat.service.ApplicationService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,7 +58,7 @@ class ApplicationControllerTest {
     @Test
     void decrypt_ShouldAccept_WhenDtoIsCorrect() throws Exception {
         // When
-        Mockito.doNothing().when(applicationService).decrypt(correctDto);
+        Mockito.doNothing().when(applicationService).decrypt(correctDto, User.builder().build()); // TODO: 1/4/2022
 
         // verify
         mockMvc.perform(createRequest(correctDto))

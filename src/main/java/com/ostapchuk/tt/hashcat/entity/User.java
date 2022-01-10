@@ -1,12 +1,11 @@
 package com.ostapchuk.tt.hashcat.entity;
 
-import java.util.Set;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,26 +15,25 @@ import lombok.Setter;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
-@Table(name = "application")
+@Table(name = "user")
 @Entity
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Application {
+public class User {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
-    @Column(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "email", nullable = false)
+    private String email;
 
-    @Column(name = "finished", nullable = false)
-    private boolean finished = false;
+    @Column(name = "active_email", nullable = false)
+    private boolean activeEmail = false;
 
-    @ManyToMany(mappedBy = "applications")
-    private Set<Hash> hashes;
+    @OneToMany(fetch = LAZY, mappedBy = "email")
+    private List<Application> applications;
 }

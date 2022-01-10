@@ -1,7 +1,8 @@
 package com.ostapchuk.tt.hashcat.controller;
 
 import com.ostapchuk.tt.hashcat.dto.ApplicationDto;
-import com.ostapchuk.tt.hashcat.service.ApplicationService;
+import com.ostapchuk.tt.hashcat.service.VerificationService;
+import java.util.concurrent.CompletableFuture;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,12 +17,12 @@ import static org.springframework.http.HttpStatus.ACCEPTED;
 @RequestMapping("/api/v1/applications")
 public class ApplicationController {
 
-    private final ApplicationService applicationService;
+    private final VerificationService verificationService;
 
     @PostMapping
     @ResponseStatus(ACCEPTED)
     public void decrypt(@Validated @RequestBody final ApplicationDto applicationDto) {
-        applicationService.decrypt(applicationDto);
+        CompletableFuture.runAsync(() -> verificationService.sendVerificationMail(applicationDto));
     }
 }
 
