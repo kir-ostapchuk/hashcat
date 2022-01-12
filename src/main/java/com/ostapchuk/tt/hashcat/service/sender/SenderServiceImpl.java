@@ -1,4 +1,4 @@
-package com.ostapchuk.tt.hashcat.service.email;
+package com.ostapchuk.tt.hashcat.service.sender;
 
 import java.util.Properties;
 import javax.mail.Authenticator;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class EmailServiceImpl implements EmailService {
+public class SenderServiceImpl implements SenderService {
 
     @Value("${sender.auth.userName}")
     private String authUserName;
