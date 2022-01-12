@@ -1,13 +1,10 @@
-FROM openjdk:16-jdk-alpine AS builder
-WORKDIR /app
-COPY gradle/ gradle/
-COPY gradlew build.gradle settings.gradle ./
-RUN ./gradlew --no-daemon dependencies
-COPY src/ src/
-RUN ./gradlew --no-daemon build
+FROM gradle:7.2.0-jdk16 AS build
+COPY --chown=gradle:gradle . /home/gradle/src
+WORKDIR /home/gradle/src
+RUN gradle build
 
-FROM openjdk:16-jdk-alpine
-WORKDIR /app
+FROM openjdk:16-jdk-slim
 EXPOSE 8080
+RUN mkdir /app
+COPY --from=build /home/gradle/src/build/libs/*.jar /app/hashcat.jar
 CMD ["java", "-jar", "/app/hashcat.jar"]
-COPY --from=builder /app/build/libs/hashcat-*.jar hashcat.jar
