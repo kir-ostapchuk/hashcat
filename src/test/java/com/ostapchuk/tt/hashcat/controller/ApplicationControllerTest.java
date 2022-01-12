@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.ostapchuk.tt.hashcat.dto.ApplicationDto;
-import com.ostapchuk.tt.hashcat.entity.User;
+import com.ostapchuk.tt.hashcat.entity.Hash;
 import com.ostapchuk.tt.hashcat.service.ApplicationService;
+import com.ostapchuk.tt.hashcat.service.sender.SenderService;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -34,8 +36,13 @@ class ApplicationControllerTest {
     @MockBean
     private ApplicationService applicationService;
 
+    @MockBean
+    private SenderService senderService;
+
     private ObjectMapper mapper;
+
     private ApplicationDto correctDto;
+
     private ApplicationDto inCorrectDto;
 
     @BeforeEach
@@ -57,12 +64,15 @@ class ApplicationControllerTest {
 
     @Test
     void decrypt_ShouldAccept_WhenDtoIsCorrect() throws Exception {
-        // When
-        Mockito.doNothing().when(applicationService).decrypt(correctDto, User.builder().build()); // TODO: 1/4/2022
+        // setup
+        List<CompletableFuture<Hash>> futures = List.of(CompletableFuture.completedFuture(Hash.builder().build()));
+
+        // when
+        Mockito.when(applicationService.decrypt(correctDto)).thenReturn(futures);
 
         // verify
         mockMvc.perform(createRequest(correctDto))
-                .andExpect(status().isAccepted());
+               .andExpect(status().isAccepted());
     }
 
     @Test
