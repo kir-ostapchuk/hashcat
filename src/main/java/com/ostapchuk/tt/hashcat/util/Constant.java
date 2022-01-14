@@ -6,14 +6,22 @@ import lombok.experimental.UtilityClass;
 public class Constant {
 
     public static final String COLON = ":";
+
     public static final String AMPERSAND = "&";
+
     public static final String TRUE = "true";
+
     public static final String ENCRYPTION_RESULTS = "Encryption results!";
+
+    public static final String VERIFICATION_MAIL_MESSAGE = "Verification mail HashCat";
 
     // URI parameters
     public static final String HASH_PARAM = "hash=";
+
     public static final String HASH_TYPE_PARAM = "hash_type=";
+
     public static final String EMAIL_PARAM = "email=";
+
     public static final String CODE_PARAM = "code=";
 
     // URI
