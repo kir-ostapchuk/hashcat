@@ -5,7 +5,7 @@ import com.ostapchuk.tt.hashcat.entity.Application;
 import com.ostapchuk.tt.hashcat.entity.Client;
 import com.ostapchuk.tt.hashcat.entity.Hash;
 import com.ostapchuk.tt.hashcat.repository.ApplicationRepository;
-import com.ostapchuk.tt.hashcat.repository.UserRepository;
+import com.ostapchuk.tt.hashcat.repository.ClientRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,16 +19,15 @@ public class ApplicationService {
 
     private final HashService hashService;
 
-    private final UserRepository userRepository;
+    private final ClientRepository clientRepository;
 
     private final ApplicationRepository applicationRepository;
 
     public List<CompletableFuture<Hash>> decrypt(final ApplicationDto applicationDto) {
-        final Client client = userRepository.findByEmail(applicationDto.getEmail());
+        final Client client = clientRepository.findByEmail(applicationDto.getEmail());
         final var application = applicationRepository.save(Application.builder()
                                                                       .client(client)
                                                                       .build());
-//        userRepository.save(user.addApplication(application));
         final var hashes = hashService.findOrSaveAll(applicationDto.getHashes(), application);
         final var saved = hashes.get(false).stream()
                                 .map(hashService::process);

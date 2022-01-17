@@ -5,9 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<Client, Long> {
-
-    Optional<Client> findByEmailAndActiveIsTrue(String email);
+public interface ClientRepository extends JpaRepository<Client, Long> {
 
     boolean existsByEmailAndActiveIsTrue(String email);
 

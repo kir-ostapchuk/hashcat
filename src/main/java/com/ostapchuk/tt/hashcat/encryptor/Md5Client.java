@@ -1,14 +1,16 @@
 package com.ostapchuk.tt.hashcat.encryptor;
 
 import com.ostapchuk.tt.hashcat.entity.Hash;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+
 import static com.ostapchuk.tt.hashcat.util.Constant.AMPERSAND;
 import static com.ostapchuk.tt.hashcat.util.Constant.CODE_PARAM;
 import static com.ostapchuk.tt.hashcat.util.Constant.EMAIL_PARAM;
