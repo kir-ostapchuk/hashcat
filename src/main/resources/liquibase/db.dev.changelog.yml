@@ -1,109 +1,177 @@
 databaseChangeLog:
-- changeSet:
-    id: 1641200207381-1
-    author: xfase (generated)
-    changes:
-    - createTable:
-        columns:
-        - column:
-            autoIncrement: true
-            constraints:
-              nullable: false
-              primaryKey: true
-              primaryKeyName: application_pkey
-            name: id
-            type: BIGINT
-        - column:
-            constraints:
-              nullable: false
-            name: email
-            type: VARCHAR(255)
-        tableName: application
-- changeSet:
-    id: 1641200207381-2
-    author: xfase (generated)
-    changes:
-    - createTable:
-        columns:
-        - column:
-            autoIncrement: true
-            constraints:
-              nullable: false
-              primaryKey: true
-              primaryKeyName: hash_pkey
-            name: id
-            type: BIGINT
-        - column:
-            constraints:
-              nullable: false
-            name: decrypted
-            type: VARCHAR(255)
-        - column:
-            name: encrypted
-            type: VARCHAR(255)
-        tableName: hash
-- changeSet:
-    id: 1641200207381-3
-    author: xfase (generated)
-    changes:
-    - createTable:
-        columns:
-        - column:
-            constraints:
-              nullable: false
-              primaryKey: true
-              primaryKeyName: application_hash_pkey
-            name: hash_id
-            type: BIGINT
-        - column:
-            constraints:
-              nullable: false
-              primaryKey: true
-              primaryKeyName: application_hash_pkey
-            name: application_id
-            type: BIGINT
-        tableName: application_hash
-- changeSet:
-    id: 1641200207381-4
-    author: xfase (generated)
-    changes:
-    - addForeignKeyConstraint:
-        baseColumnNames: application_id
-        baseTableName: application_hash
-        constraintName: fk6826ta6js822j94x6jdsx7qcp
-        deferrable: false
-        initiallyDeferred: false
-        onDelete: NO ACTION
-        onUpdate: NO ACTION
-        referencedColumnNames: id
-        referencedTableName: application
-        validate: true
-- changeSet:
-    id: 1641200207381-5
-    author: xfase (generated)
-    changes:
-    - addForeignKeyConstraint:
-        baseColumnNames: hash_id
-        baseTableName: application_hash
-        constraintName: fkmtc4lurjx1h93sww0k6kxr6og
-        deferrable: false
-        initiallyDeferred: false
-        onDelete: NO ACTION
-        onUpdate: NO ACTION
-        referencedColumnNames: id
-        referencedTableName: hash
-        validate: true
-- changeSet:
-    id: 1641200207381-6
-    author: xfase (generated)
-    changes:
-    - addUniqueConstraint:
-        columnNames: decrypted
-        constraintName: uk_i9snxbgut6m0hkmcl0f7quypc
-        tableName: hash
-- changeSet:
-    id: 1641200207381-7
-    author: k.ostapchuk
-    changes:
-    - sql:
-        sql: insert into hash (decrypted, encrypted) values ('12345678', '')
+  - changeSet:
+      id: 1642798126732-1
+      author: 'k.ostapchuk (generated)'
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: user_pk
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: email
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  defaultValueBoolean: false
+                  name: active
+                  type: BOOLEAN
+              - column:
+                  constraints:
+                    nullable: false
+                  name: link_uuid
+                  type: VARCHAR(255)
+            tableName: client
+  - changeSet:
+      id: 1642798126732-2
+      author: 'k.ostapchuk (generated)'
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: application_hash_pkey
+                  name: hash_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: application_hash_pkey
+                  name: application_id
+                  type: BIGINT
+            tableName: application_hash
+  - changeSet:
+      id: 1642798126732-3
+      author: 'k.ostapchuk (generated)'
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: application_pkey
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: client_id
+                  type: BIGINT
+            tableName: application
+  - changeSet:
+      id: 1642798126732-4
+      author: 'k.ostapchuk (generated)'
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: hash_pkey
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: decrypted
+                  type: VARCHAR(255)
+              - column:
+                  name: encrypted
+                  type: VARCHAR(255)
+            tableName: hash
+  - changeSet:
+      id: 1642798126732-5
+      author: 'k.ostapchuk (generated)'
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: email
+            indexName: user_email_uindex
+            tableName: client
+            unique: true
+  - changeSet:
+      id: 1642798126732-6
+      author: 'k.ostapchuk (generated)'
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: link_uuid
+            indexName: user_link_uuid_uindex
+            tableName: client
+            unique: true
+  - changeSet:
+      id: 1642798126732-7
+      author: 'k.ostapchuk (generated)'
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: client_id
+            baseTableName: application
+            constraintName: application_user_id_fk
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: client
+            validate: true
+  - changeSet:
+      id: 1642798126732-8
+      author: 'k.ostapchuk (generated)'
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: application_id
+            baseTableName: application_hash
+            constraintName: fk6826ta6js822j94x6jdsx7qcp
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: application
+            validate: true
+  - changeSet:
+      id: 1642798126732-9
+      author: 'k.ostapchuk (generated)'
+      changes:
+        - addUniqueConstraint:
+            columnNames: decrypted
+            constraintName: uk_i9snxbgut6m0hkmcl0f7quypc
+            tableName: hash
+  - changeSet:
+      id: 1642798126732-10
+      author: 'k.ostapchuk (generated)'
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: hash_id
+            baseTableName: application_hash
+            constraintName: fkmtc4lurjx1h93sww0k6kxr6og
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: hash
+            validate: true
+  - changeSet:
+      id: 1641200207381-11
+      author: 'k.ostapchuk'
+      changes:
+        - sql:
+            sql: insert into hash (decrypted, encrypted) values ('12345678', '')
