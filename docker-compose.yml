@@ -1,6 +1,13 @@
 version: "2.4"
 
 services:
+  rabbitmq:
+    container_name: hashcat_rabbitmq
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
   nginx:
     build:
       context: nginx
