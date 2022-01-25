@@ -23,7 +23,6 @@ public class ApplicationController {
     @ResponseStatus(ACCEPTED)
     public void decrypt(@Validated @RequestBody final ApplicationDto applicationDto) {
         applicationService.decrypt(applicationDto);
-//        CompletableFuture.runAsync(() -> applicationService.decrypt(applicationDto));
     }
 }
 

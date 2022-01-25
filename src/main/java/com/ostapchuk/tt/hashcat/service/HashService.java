@@ -45,14 +45,10 @@ public class HashService {
                             } else {
                                 hash.setEncrypted(body);
                             }
-//                            hash.getApplications().forEach(a -> applicationRepository.decreaseAmount(a.getId()));
-//                            hash.getApplications().forEach(a -> a.setAmount(a.getAmount() - 1));
                             return hashRepository.save(hash);
                         });
     }
 
-    // TODO: 1/22/22 replace boolean with status maybe
-    // TODO: 1/22/22 check for spaces in the decrypted
     @Transactional
     public List<Hash> findOrSaveAll(final List<String> decrypted, final Application application) {
         return decrypted.stream()
@@ -61,7 +57,6 @@ public class HashService {
     }
 
     public Hash findOrSave(final String decrypted, final Application application) {
-        // TODO: 1/22/22 or Else send message to queue
         return findByDecrypted(decrypted, application).orElseGet(() -> {
             final Hash hash = Hash.builder()
                                   .decrypted(decrypted)
@@ -74,7 +69,6 @@ public class HashService {
     }
 
     public Hash findByDecrypted(final String decrypted) {
-        // TODO: 1/22/22 redo
         return hashRepository.findByDecrypted(decrypted).orElseThrow();
     }
 
