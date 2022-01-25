@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import static com.ostapchuk.tt.hashcat.util.Constant.DECRYPTED_QUEUE;
 import static com.ostapchuk.tt.hashcat.util.Constant.ERROR_CODE_MD5_CLIENT;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
@@ -67,7 +68,7 @@ public class HashService {
                                   .build()
                                   .addApplication(application);
             final Hash saved = hashRepository.save(hash);
-            rabbitTemplate.convertAndSend("hashes", decrypted);
+            rabbitTemplate.convertAndSend(DECRYPTED_QUEUE, decrypted);
             return saved;
         });
     }

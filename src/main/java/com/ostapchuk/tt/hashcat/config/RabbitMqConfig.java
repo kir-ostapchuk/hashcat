@@ -4,16 +4,19 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static com.ostapchuk.tt.hashcat.util.Constant.DECRYPTED_QUEUE;
+import static com.ostapchuk.tt.hashcat.util.Constant.EMAILS_QUEUE;
+
 @Configuration
 public class RabbitMqConfig {
 
-    @Bean("hashes")
-    public Queue hashes() {
-        return new Queue("hashes", true);
+    @Bean(DECRYPTED_QUEUE)
+    public Queue decrypted() {
+        return new Queue(DECRYPTED_QUEUE, true);
     }
 
-    @Bean("emails")
+    @Bean(EMAILS_QUEUE)
     public Queue emails() {
-        return new Queue("emails", true);
+        return new Queue(EMAILS_QUEUE, true);
     }
 }

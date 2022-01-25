@@ -6,9 +6,12 @@ import com.ostapchuk.tt.hashcat.entity.Hash;
 import com.ostapchuk.tt.hashcat.repository.ApplicationRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.ostapchuk.tt.hashcat.util.Constant.EMAILS_QUEUE;
 
 @Service
 @AllArgsConstructor
@@ -20,6 +23,7 @@ public class ApplicationService {
 
     private final ApplicationRepository applicationRepository;
 
+    @Async
     public void decrypt(final ApplicationDto applicationDto) {
         final var application = applicationRepository.save(Application.builder()
                                                                       .email(applicationDto.getEmail())
@@ -28,8 +32,12 @@ public class ApplicationService {
         final long savedAmount = hashes.stream()
                                        .filter(h -> h.getEncrypted() == null)
                                        .count();
-        application.setAmount((int) savedAmount);
-        applicationRepository.save(application);
+        if (savedAmount == 0) {
+            rabbitTemplate.convertAndSend(EMAILS_QUEUE, application.getId());
+        } else {
+            application.setAmount((int) savedAmount);
+            applicationRepository.save(application);
+        }
     }
 
     public Application findById(final Long id) {
@@ -42,7 +50,7 @@ public class ApplicationService {
                                                     .map(Application::getAmount)
                                                     .orElse(-1);
         if (amount == 0) {
-            rabbitTemplate.convertAndSend("emails", id);
+            rabbitTemplate.convertAndSend(EMAILS_QUEUE, id);
         }
     }
 }

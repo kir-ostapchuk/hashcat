@@ -7,9 +7,11 @@ import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
+import static com.ostapchuk.tt.hashcat.util.Constant.DECRYPTED_QUEUE;
+
 @Component
 @RequiredArgsConstructor
-@RabbitListener(queues = "hashes")
+@RabbitListener(queues = DECRYPTED_QUEUE)
 public class HashConsumer {
 
     private final HashService hashService;

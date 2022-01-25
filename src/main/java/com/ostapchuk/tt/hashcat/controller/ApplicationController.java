@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.concurrent.CompletableFuture;
-
 import static org.springframework.http.HttpStatus.ACCEPTED;
 
 @AllArgsConstructor
@@ -21,15 +19,11 @@ public class ApplicationController {
 
     private final ApplicationService applicationService;
 
-//    private final SenderService senderService;
-
     @PostMapping
     @ResponseStatus(ACCEPTED)
     public void decrypt(@Validated @RequestBody final ApplicationDto applicationDto) {
-        CompletableFuture.runAsync(() -> applicationService.decrypt(applicationDto)
-//            final var message = SenderUtil.prepareMessage(futures);
-//            senderService.send(applicationDto.getEmail(), message.get(), ENCRYPTION_RESULTS);
-        );
+        applicationService.decrypt(applicationDto);
+//        CompletableFuture.runAsync(() -> applicationService.decrypt(applicationDto));
     }
 }
 

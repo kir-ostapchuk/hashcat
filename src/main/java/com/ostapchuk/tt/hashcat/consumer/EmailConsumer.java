@@ -9,11 +9,12 @@ import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
+import static com.ostapchuk.tt.hashcat.util.Constant.EMAILS_QUEUE;
 import static com.ostapchuk.tt.hashcat.util.Constant.ENCRYPTION_RESULTS;
 
 @Component
 @RequiredArgsConstructor
-@RabbitListener(queues = "emails")
+@RabbitListener(queues = EMAILS_QUEUE)
 public class EmailConsumer {
 
     private final SenderService senderService;
