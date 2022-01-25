@@ -2,7 +2,6 @@ package com.ostapchuk.tt.hashcat.controller;
 
 import com.ostapchuk.tt.hashcat.dto.ApplicationDto;
 import com.ostapchuk.tt.hashcat.service.ApplicationService;
-import com.ostapchuk.tt.hashcat.service.sender.SenderService;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,16 +21,15 @@ public class ApplicationController {
 
     private final ApplicationService applicationService;
 
-    private final SenderService senderService;
+//    private final SenderService senderService;
 
     @PostMapping
     @ResponseStatus(ACCEPTED)
     public void decrypt(@Validated @RequestBody final ApplicationDto applicationDto) {
-        CompletableFuture.runAsync(() -> {
-            final var futures = applicationService.decrypt(applicationDto);
+        CompletableFuture.runAsync(() -> applicationService.decrypt(applicationDto)
 //            final var message = SenderUtil.prepareMessage(futures);
 //            senderService.send(applicationDto.getEmail(), message.get(), ENCRYPTION_RESULTS);
-        });
+        );
     }
 }
 

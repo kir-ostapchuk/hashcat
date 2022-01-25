@@ -1,17 +1,20 @@
 package com.ostapchuk.tt.hashcat.entity;
 
-import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import java.util.Set;
+
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Table(name = "application")
@@ -30,6 +33,9 @@ public class Application {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @ManyToMany(mappedBy = "applications")
+    @Column(name = "amount")
+    private int amount;
+
+    @ManyToMany(mappedBy = "applications", fetch = FetchType.EAGER)
     private Set<Hash> hashes;
 }

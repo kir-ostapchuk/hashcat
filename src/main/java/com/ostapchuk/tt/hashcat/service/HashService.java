@@ -3,18 +3,18 @@ package com.ostapchuk.tt.hashcat.service;
 import com.ostapchuk.tt.hashcat.encryptor.Encryptor;
 import com.ostapchuk.tt.hashcat.entity.Application;
 import com.ostapchuk.tt.hashcat.entity.Hash;
+import com.ostapchuk.tt.hashcat.repository.ApplicationRepository;
 import com.ostapchuk.tt.hashcat.repository.HashRepository;
 import lombok.AllArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 import static com.ostapchuk.tt.hashcat.util.Constant.ERROR_CODE_MD5_CLIENT;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -22,6 +22,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 @Service
 @Slf4j
 @AllArgsConstructor
+@ToString
 public class HashService {
 
     private final RabbitTemplate rabbitTemplate;
@@ -29,6 +30,8 @@ public class HashService {
     private final Encryptor encryptor;
 
     private final HashRepository hashRepository;
+
+    private final ApplicationRepository applicationRepository;
 
     @Transactional
     public CompletableFuture<Hash> process(final Hash hash) {
@@ -41,6 +44,8 @@ public class HashService {
                             } else {
                                 hash.setEncrypted(body);
                             }
+//                            hash.getApplications().forEach(a -> applicationRepository.decreaseAmount(a.getId()));
+//                            hash.getApplications().forEach(a -> a.setAmount(a.getAmount() - 1));
                             return hashRepository.save(hash);
                         });
     }
@@ -48,22 +53,22 @@ public class HashService {
     // TODO: 1/22/22 replace boolean with status maybe
     // TODO: 1/22/22 check for spaces in the decrypted
     @Transactional
-    public Map<Boolean, List<Hash>> findOrSaveAll(final List<String> decrypted, final Application application) {
+    public List<Hash> findOrSaveAll(final List<String> decrypted, final Application application) {
         return decrypted.stream()
-                        .map(d -> findOrSave(d.trim(), application))
-                        .collect(Collectors.partitioningBy(h -> h.getEncrypted() != null));
+                        .map(d -> findOrSave(d, application))
+                        .toList();
     }
 
     public Hash findOrSave(final String decrypted, final Application application) {
         // TODO: 1/22/22 or Else send message to queue
         return findByDecrypted(decrypted, application).orElseGet(() -> {
-            rabbitTemplate.convertAndSend("hashes", decrypted);
             final Hash hash = Hash.builder()
                                   .decrypted(decrypted)
                                   .build()
                                   .addApplication(application);
-            return hashRepository.save(hash);
-//            return new Hash();
+            final Hash saved = hashRepository.save(hash);
+            rabbitTemplate.convertAndSend("hashes", decrypted);
+            return saved;
         });
     }
 

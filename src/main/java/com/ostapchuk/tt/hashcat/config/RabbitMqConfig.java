@@ -7,8 +7,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMqConfig {
 
-    @Bean
-    public Queue myQueue() {
-        return new Queue("hashes", false);
+    @Bean("hashes")
+    public Queue hashes() {
+        return new Queue("hashes", true);
+    }
+
+    @Bean("emails")
+    public Queue emails() {
+        return new Queue("emails", true);
     }
 }

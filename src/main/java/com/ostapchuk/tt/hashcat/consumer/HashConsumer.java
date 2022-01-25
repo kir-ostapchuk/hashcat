@@ -1,5 +1,6 @@
 package com.ostapchuk.tt.hashcat.consumer;
 
+import com.ostapchuk.tt.hashcat.service.ApplicationService;
 import com.ostapchuk.tt.hashcat.service.HashService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
@@ -13,8 +14,12 @@ public class HashConsumer {
 
     private final HashService hashService;
 
+    private final ApplicationService applicationService;
+
     @RabbitHandler
     public void listen(final String decrypted) {
-        hashService.process(hashService.findByDecrypted(decrypted));
+        hashService.process(hashService.findByDecrypted(decrypted))
+                   .thenAccept(h -> h.getApplications()
+                                     .forEach(a -> applicationService.updateAmount(a.getId())));
     }
 }

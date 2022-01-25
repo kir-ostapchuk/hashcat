@@ -1,10 +1,14 @@
 package com.ostapchuk.tt.hashcat.util;
 
 import com.ostapchuk.tt.hashcat.entity.Hash;
+import lombok.experimental.UtilityClass;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
-import lombok.experimental.UtilityClass;
+
 import static com.ostapchuk.tt.hashcat.util.Constant.COLON;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.SPACE;
@@ -22,5 +26,12 @@ public class SenderUtil {
                 }
         ));
         return message;
+    }
+
+    public static String prepareMessageNew(final Set<Hash> hashes) {
+        final List<String> preparedHashes = hashes.stream()
+                                                  .map(h -> h.getDecrypted() + COLON + SPACE + h.getEncrypted())
+                                                  .toList();
+        return StringUtils.join(preparedHashes, System.lineSeparator());
     }
 }
