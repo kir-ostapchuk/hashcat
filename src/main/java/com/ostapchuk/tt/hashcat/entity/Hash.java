@@ -39,6 +39,7 @@ public class Hash {
     @Column(name = "encrypted", unique = true)
     private String encrypted;
 
+    // TODO: 1/25/22 remove eager 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "application_hash",
             joinColumns = {@JoinColumn(name = "hash_id")},

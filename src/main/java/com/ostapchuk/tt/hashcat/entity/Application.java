@@ -36,6 +36,7 @@ public class Application {
     @Column(name = "amount")
     private int amount;
 
+    // TODO: 1/25/22 remove eager
     @ManyToMany(mappedBy = "applications", fetch = FetchType.EAGER)
     private Set<Hash> hashes;
 }

@@ -34,6 +34,7 @@ public class HashService {
 
     private final ApplicationRepository applicationRepository;
 
+    // TODO: 1/25/22 simplify the logic
     @Transactional
     public CompletableFuture<Hash> process(final Hash hash) {
         return encryptor.encrypt(hash)

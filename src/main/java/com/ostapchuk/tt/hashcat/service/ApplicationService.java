@@ -23,6 +23,7 @@ public class ApplicationService {
 
     private final ApplicationRepository applicationRepository;
 
+    // TODO: 1/25/22 simplify the logic
     @Async
     public void decrypt(final ApplicationDto applicationDto) {
         final var application = applicationRepository.save(Application.builder()
